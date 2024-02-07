@@ -45,7 +45,7 @@ class NormalizedDateService:
         if month in months:
             return data_mapping.get(month)
 
-    def get_normalized_date(self, merged_trees: dict):
+    def normalized_date(self, merged_trees: dict):
         _NAME_KEY = "ДатаДокумента"
 
         document_data_text = merged_trees.get(_NAME_KEY)
@@ -82,7 +82,7 @@ class NormalizedTimeFrames:
 
         return '_'.join(structure_data)
 
-    def get_normalized_time(self, merged_trees: dict):
+    def normalized_time(self, merged_trees: dict):
         payment = merged_trees.get("Оплата")
         if payment is None:
             return ''
@@ -129,8 +129,8 @@ class PostProcessingService:
     @staticmethod
     def normalize(merged_trees: dict):
 
-        NormalizedDateService().get_normalized_date(merged_trees=merged_trees)
-        NormalizedTimeFrames().get_normalized_time(merged_trees=merged_trees)
+        NormalizedDateService().normalized_date(merged_trees=merged_trees)
+        NormalizedTimeFrames().normalized_time(merged_trees=merged_trees)
 
         return merged_trees
 
