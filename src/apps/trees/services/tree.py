@@ -1,4 +1,6 @@
 import copy
+import re
+import string
 
 from words2numsrus import NumberExtractor
 
@@ -70,6 +72,11 @@ class NormalizedTimeFrames:
 
         return '_'.join(structure_data)
 
+    @staticmethod
+    def delete_special_symbol(due_date: str):
+        chars = re.escape(string.punctuation)
+        return re.sub('[' + chars + ']', '', due_date)
+
     def get_normalized_time(self, merged_trees: dict):
         payment = merged_trees.get("Оплата")
         if payment is None:
@@ -79,8 +86,10 @@ class NormalizedTimeFrames:
         if due_date is None:
             return ''
 
+        deleted_special_symbol = self.delete_special_symbol(due_date)
+
         extractor = NumberExtractor()
-        prepared_due_date = extractor.replace(due_date).strip().split()
+        prepared_due_date = extractor.replace(deleted_special_symbol).strip().split()
 
         structure_data = ''
 
