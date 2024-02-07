@@ -4,6 +4,9 @@ from words2numsrus import NumberExtractor
 
 
 class NormalizedDateService:
+    """
+    Сервис нормализации даты
+    """
     @staticmethod
     def _prepare_day_of_month(day: str):
         if len(day) == 2:
@@ -46,6 +49,9 @@ class NormalizedDateService:
 
 
 class NormalizedTimeFrames:
+    """
+    Сервис нормализации времени
+    """
     @staticmethod
     def _get_structure_data(number: int, word: str) -> str:
         structure_data = ['0', '0', '0', '0']
@@ -90,16 +96,22 @@ class NormalizedTimeFrames:
 
 
 class MergedTreesService:
+    """
+    Сервис мёрджа деревьев
+    """
     @staticmethod
-    def get_merged_trees(one_free: dict, two_free: dict):
-        for key, value in one_free.items():
-            if key in two_free:
-                one_free[key].update(two_free.get(key))
+    def get_merged_trees(one_tree: dict, two_tree: dict):
+        for key, value in two_tree.items():
+            if key in two_tree:
+                one_tree[key].update(two_tree.get(key))
 
-        return copy.deepcopy(one_free)
+        return copy.deepcopy(one_tree)
 
 
 class PostProcessingService:
+    """
+    Сервис нормализаии смёрдженного дерева
+    """
     @staticmethod
     def normalize(merged_trees: dict):
 
@@ -110,10 +122,13 @@ class PostProcessingService:
 
 
 class TreeService:
+    """
+    Входной сервис
+    """
     def __init__(self):
         self._merged_trees_service = MergedTreesService()
         self._post_processing_service = PostProcessingService()
 
-    def processing(self, one_free: dict, two_free: dict):
-        merged_trees = self._merged_trees_service.get_merged_trees(one_free=one_free, two_free=two_free)
+    def process(self, one_tree: dict, two_tree: dict):
+        merged_trees = self._merged_trees_service.get_merged_trees(one_tree=one_tree, two_tree=two_tree)
         return self._post_processing_service.normalize(merged_trees=merged_trees)

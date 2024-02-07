@@ -13,10 +13,10 @@ router = APIRouter(prefix='/trees', tags=['Trees'])
     description='get legal information'
 )
 async def post_processing(
-        two_free: UploadFile,
-        one_free: str = Form(...),
+        two_tree: UploadFile,
+        one_tree: str = Form(...),
 ):
-    xml_decoded = XmlDecoder().decode(two_free.file)
-    json_decoded = JsonDecoder().decode(one_free)
+    xml_decoded = XmlDecoder().decode(two_tree.file)
+    json_decoded = JsonDecoder().decode(one_tree)
 
-    return TreeService().processing(json_decoded, xml_decoded)
+    return TreeService().process(json_decoded, xml_decoded)
