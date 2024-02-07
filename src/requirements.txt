@@ -1,0 +1,7 @@
+pydantic==2.6.1
+uvicorn==0.17.6
+fastapi==0.109.2
+xmltodict==0.13.0
+words2numsrus== 0.1.0
+python-multipart==0.0.7
+pydantic-settings==2.1.0
