@@ -5,6 +5,13 @@ import string
 from words2numsrus import NumberExtractor
 
 
+class BaseNormalizeService:
+    @staticmethod
+    def delete_special_symbol(due_date: str):
+        chars = re.escape(string.punctuation)
+        return re.sub('[' + chars + ']', '', due_date)
+
+
 class NormalizedDateService:
     """
     Сервис нормализации даты
@@ -41,7 +48,10 @@ class NormalizedDateService:
     def get_normalized_date(self, merged_trees: dict):
         _NAME_KEY = "ДатаДокумента"
 
-        document_data = merged_trees.get(_NAME_KEY).strip().split()
+        document_data_text = merged_trees.get(_NAME_KEY)
+        deleted_special_symbol = BaseNormalizeService.delete_special_symbol(document_data_text)
+
+        document_data = deleted_special_symbol.strip().split()
 
         day_month = self._prepare_day_of_month(document_data[0])
         month = self._prepare_month(document_data[1])
@@ -72,11 +82,6 @@ class NormalizedTimeFrames:
 
         return '_'.join(structure_data)
 
-    @staticmethod
-    def delete_special_symbol(due_date: str):
-        chars = re.escape(string.punctuation)
-        return re.sub('[' + chars + ']', '', due_date)
-
     def get_normalized_time(self, merged_trees: dict):
         payment = merged_trees.get("Оплата")
         if payment is None:
@@ -86,7 +91,7 @@ class NormalizedTimeFrames:
         if due_date is None:
             return ''
 
-        deleted_special_symbol = self.delete_special_symbol(due_date)
+        deleted_special_symbol = BaseNormalizeService.delete_special_symbol(due_date)
 
         extractor = NumberExtractor()
         prepared_due_date = extractor.replace(deleted_special_symbol).strip().split()
