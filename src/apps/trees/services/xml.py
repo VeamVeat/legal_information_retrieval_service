@@ -1,8 +1,8 @@
 
 class XmlListConfig(list):
-    def __init__(self, aList):
+    def __init__(self, a_list):
         super().__init__()
-        for element in aList:
+        for element in a_list:
             if element:
                 if len(element) == 1 or element[0].tag != element[1].tag:
                     self.append(XmlDictConfig(element))

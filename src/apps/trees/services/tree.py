@@ -17,7 +17,7 @@ class NormalizedDateService:
     Сервис нормализации даты
     """
     @staticmethod
-    def _prepare_day_of_month(day: str):
+    def _prepare_day_of_month(day: str) -> str:
         if len(day) == 2:
             return day
 
@@ -25,7 +25,7 @@ class NormalizedDateService:
             return f'0{day}'
 
     @staticmethod
-    def _prepare_month(month: str):
+    def _prepare_month(month: str) -> str | None:
         data_mapping = {
             'января': '01',
             'февраля': '02',
@@ -60,7 +60,7 @@ class NormalizedDateService:
         merged_trees[_NAME_KEY] = f'{day_month}.{month}.{year}'
 
 
-class NormalizedTimeFrames:
+class NormalizedTimeFramesService:
     """
     Сервис нормализации времени
     """
@@ -82,7 +82,7 @@ class NormalizedTimeFrames:
 
         return '_'.join(structure_data)
 
-    def normalized_time(self, merged_trees: dict):
+    def normalized_time(self, merged_trees: dict) -> str | None:
         payment = merged_trees.get("Оплата")
         if payment is None:
             return ''
@@ -114,7 +114,7 @@ class MergedTreesService:
     Сервис мёрджа деревьев
     """
     @staticmethod
-    def get_merged_trees(one_tree: dict, two_tree: dict):
+    def get_merged_trees(one_tree: dict, two_tree: dict) -> dict:
         for key, value in two_tree.items():
             if key in two_tree:
                 one_tree[key].update(two_tree.get(key))
@@ -127,10 +127,10 @@ class PostProcessingService:
     Сервис нормализаии смёрдженного дерева
     """
     @staticmethod
-    def normalize(merged_trees: dict):
+    def normalize(merged_trees: dict) -> dict:
 
         NormalizedDateService().normalized_date(merged_trees=merged_trees)
-        NormalizedTimeFrames().normalized_time(merged_trees=merged_trees)
+        NormalizedTimeFramesService().normalized_time(merged_trees=merged_trees)
 
         return merged_trees
 
@@ -143,6 +143,6 @@ class TreeService:
         self._merged_trees_service = MergedTreesService()
         self._post_processing_service = PostProcessingService()
 
-    def process(self, one_tree: dict, two_tree: dict):
+    def process(self, one_tree: dict, two_tree: dict) -> dict:
         merged_trees = self._merged_trees_service.get_merged_trees(one_tree=one_tree, two_tree=two_tree)
         return self._post_processing_service.normalize(merged_trees=merged_trees)
