@@ -21,5 +21,6 @@ class XmlDecoder(BaseDecoder):
 
 
 class JsonDecoder(BaseDecoder):
-    def decode(self, structure):
+    @staticmethod
+    def decode(structure):
         return json.loads(structure)
